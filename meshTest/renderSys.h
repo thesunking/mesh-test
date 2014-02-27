@@ -5,9 +5,6 @@
 #include "renderCmp.h"
 #include <Simple OpenGL Image Library\src\SOIL.h>
 
-enum renderState { RENDER_TO_SCREEN, RENDER_TO_SHADOWMAP };
-
-struct vertexAttrib { static const GLuint VERTEX = 0, NORMAL = 1, COLOR = 2, UV = 3, TANGENT = 4, BITANGENT = 5; };
 
 struct CubeDefinition {
 	std::vector<float> vertices;
@@ -27,20 +24,10 @@ private:
 	sf::RenderWindow &window;
 	unsigned int window_x, window_y;
 
-	renderState currentState;
-
 	//main shader and its linked variables
 	GLuint mainProgramID;
-	GLuint modelMatrixID, rotationMatrixID, viewMatrixID, perspectMatrixID, invLightID, depthBiasMVPID;
-	GLuint lightID, normalmapSamplerID, shadowmapSamplerID;
-
-	//shadowmap shader and its linked variables
-	GLuint shadowmapProgramID;
-	GLuint depthMVPID;
-	
-	//framebuffer
-	GLuint framebufferID;
-	GLuint depthTexture;
+	GLuint modelMatrixID, rotationMatrixID, viewMatrixID, perspectMatrixID;
+	GLuint lightID, normalmapSamplerID;
 
 
 	//vertex array objects and vertex buffer objects
@@ -61,7 +48,6 @@ private:
 	glm::vec4 light;
 	glm::mat4 mV; //view matrix
 	glm::mat4 mP; //perspective matrix
-	glm::mat4 biasMatrix;
 
 	void loadShaders();
 
@@ -70,14 +56,11 @@ public:
 	RenderSys(sf::RenderWindow &window);
 
 	void prepare(); //called before any other draw functions for a given frame
-	void state( renderState state );
-	void clearShadowmap();
 	void updateViewMatrix( glm::mat4 matView );
 	void updateLightPosition( float angle );
 
 	void drawNumber(glm::vec3 pos, int number);
 
-	void initFramebuffer();
 	void initTerrain(std::vector<glm::vec3> &points,
 					std::vector<glm::vec3> &normals,
 					std::vector<float> &color,

@@ -58,7 +58,6 @@ WorldSys::WorldSys(RenderSys &render) : control(entity, terrain, camera), camera
 	entity.get<RenderCmp>(block2).updateModelMatrix();
 	*/
 
-	render.initFramebuffer();
 	render.initTerrain(terrain.getPoints(), terrain.getNormals(), terrain.getColors(),terrain.getUVs(), terrain.getTangents(), terrain.getBitangents(), terrain.getIndices());
 	render.initEntity();
 
@@ -86,24 +85,6 @@ void WorldSys::draw(RenderSys &render) {
 	render.updateViewMatrix(camera.updateView());
 	render.updateLightPosition(sunAngle);
 
-	// RenderSys is treated as a state machine (similar to OpenGL)
-	// Before drawing objects, WorldSys will put RenderSys into the appropriate state
-
-	// Clear shadowmap from previous frame
-	render.clearShadowmap();
-
-	// Render everything to shadowmap
-	render.state(renderState::RENDER_TO_SHADOWMAP);
-	//drawAll(render);
-	RenderCmp* cmps = entity.getAll<RenderCmp>();
-	unsigned int size = entity.getSize<RenderCmp>();
-
-	for (unsigned int i = 0; i != size; ++i) {
-		render.drawEntity(cmps[i]);
-	}
-
-	// Render everything to screen
-	render.state(renderState::RENDER_TO_SCREEN);
 	drawAll(render);
 	
 }
