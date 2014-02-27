@@ -7,22 +7,22 @@ TerrainSys::TerrainSys() : side_length(200), scaleAmount(4.0f) {
 
 	int rnd = rand();
 
-	height0.set(0.00L, 0.100L, 20.00L, 1, rnd+1); //large trends
-	height1.set(0.00L, 0.500L, 1.000L, 1, rnd+0); //mid   trends
-	height2.set(0.00L, 1.000L, 0.200L, 1, rnd+2); //small trends
+	height0.set(0.00f, 0.100f, 20.00f, 1, rnd+1); //large trends
+	height1.set(0.00f, 0.500f, 1.000f, 1, rnd+0); //mid   trends
+	height2.set(0.00f, 1.000f, 0.200f, 1, rnd+2); //small trends
 
-	temp.set(0.00L, 0.02L, 1.00L, 1, rnd+3);
-	rain.set(0.00L, 0.02L, 1.00L, 1, rnd+4);
+	temp.set(0.00f, 0.02f, 1.00f, 1, rnd+3);
+	rain.set(0.00f, 0.02f, 1.00f, 1, rnd+4);
 
 	createPerlinMesh();
 
 }
 
-double TerrainSys::getHeight(double x, double z) {
+float TerrainSys::getHeight(float x, float z) {
 
-	double y0 = height0.getHeight(x, z);
-	double y1 = height1.getHeight(x, z);
-	double y2 = height2.getHeight(x, z);
+	float y0 = height0.getHeight(x, z);
+	float y1 = height1.getHeight(x, z);
+	float y2 = height2.getHeight(x, z);
 
 	return y0 + y1 + y2;
 
@@ -62,10 +62,10 @@ void TerrainSys::createPerlinMesh() {
 
 void TerrainSys::createHeightmap() {
 
-	for (int x = 0; x < side_length; ++x) {
-		for (int z = 0; z < side_length; ++z) {
+	for (unsigned int x = 0; x < side_length; ++x) {
+		for (unsigned int z = 0; z < side_length; ++z) {
 			
-			float y = (float)getHeight(x, z);
+			float y = getHeight((float)x, (float)z);
 			glm::vec3 point(x, y, z);
 
 			points.push_back( point );
@@ -77,7 +77,7 @@ void TerrainSys::createHeightmap() {
 
 void TerrainSys::scaleMesh() {
 
-	for (int i = 0; i < points.size(); ++i) {
+	for (unsigned int i = 0; i < points.size(); ++i) {
 		points[i].x *= scaleAmount;
 		points[i].y *= scaleAmount;
 		points[i].z *= scaleAmount;
@@ -88,7 +88,7 @@ void TerrainSys::scaleMesh() {
 void TerrainSys::createIndices() {
 
 	const unsigned int size = points.size();
-	const unsigned int n    = sqrt(size);
+	const unsigned int n    = (int)sqrt(size);
 
 	for (unsigned int x = 0; x < n-1; ++x) {
 		for (unsigned int z = 0; z < n-1; ++z) {
@@ -147,7 +147,7 @@ void TerrainSys::addTempAndRain() {
 void TerrainSys::coolHighPoints() {
 
 	//adjust temperature for extreme heights
-	for (int i = 0; i < points.size(); ++i) {
+	for (unsigned int i = 0; i < points.size(); ++i) {
 		float adj_ht = (points[i].y / scaleAmount);
 		arrTemp[i] -= ( adj_ht * adj_ht * 0.01f );
 	}
@@ -158,7 +158,7 @@ void TerrainSys::addRainShadows() {
 
 	//adjust rainfall for rain shadows caused by mountains
 	//assuming prevailing wind is in the +x direction
-	for (int i = 0; i < points.size(); ++i) {
+	for (unsigned int i = 0; i < points.size(); ++i) {
 		
 		float x = points[i].x / scaleAmount;
 		float z = points[i].z / scaleAmount;
@@ -183,7 +183,7 @@ void TerrainSys::addRainShadows() {
 
 void TerrainSys::colorBiomes() {
 
-	for (int i = 0; i < points.size(); ++i) {
+	for (unsigned int i = 0; i < points.size(); ++i) {
 
 		arrColor.push_back( arrTemp[i] );			//R
 		arrColor.push_back( arrRain[i] );			//G
@@ -201,8 +201,8 @@ void TerrainSys::colorBiomes() {
 
 void TerrainSys::calcTextureCoords() {
 
-	for (int x = 0; x < side_length; ++x) {
-		for (int z = 0; z < side_length; ++z) {
+	for (unsigned int x = 0; x < side_length; ++x) {
+		for (unsigned int z = 0; z < side_length; ++z) {
 
 			//float u = (x % 2 == 0) ? 0.0f : 1.0f;
 			//float v = (z % 2 == 0) ? 0.0f : 1.0f;
@@ -285,8 +285,8 @@ void TerrainSys::calcTangents() {
 		unsigned int number_of_averaged_values = 0;
 
 		//'a' and 'b' are used to find the index of the triangles adjacent to the current vertex
-		int a = 2 * (vi - floor(vi / side_length));
-		int b = 2 * (vi - floor(vi / side_length)) - 2 * side_length;
+		int a = 2 * (vi - (int)floor(vi / side_length));
+		int b = 2 * (vi - (int)floor(vi / side_length)) - 2 * side_length;
 
 		if (triFlags[0]) {
 			accum_T += tangents[b];
@@ -351,15 +351,15 @@ std::vector<glm::vec3> TerrainSys::getBitangents() { return avg_bitan; }
 
 
 
-double TerrainSys::getFloorHeight(double x, double z) {
+float TerrainSys::getFloorHeight(float x, float z) {
 
 	//jumps directly to the required point in array
 	//triangle needed will either be p_i or p_i+1
-	int predicted_index = (int) (2 * ( floor(x/scaleAmount) * (side_length-1) + floor(z/scaleAmount) ));
+	int predicted_index = (int)(2 * (floor(x / scaleAmount) * (side_length - 1) + floor(z / scaleAmount)));
 
 	bool out_of_bounds = false;
 	if (predicted_index < 0 ) {out_of_bounds = true;}
-	else if (predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
+	else if ((unsigned int)predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
 
 	if (out_of_bounds == false) {
 		for (int i = predicted_index; i < predicted_index+2; ++i) {
@@ -419,7 +419,7 @@ double TerrainSys::getFloorHeight(double x, double z) {
 
 }
 
-glm::vec3 TerrainSys::getNormal(double x, double z) {
+glm::vec3 TerrainSys::getNormal(float x, float z) {
 
 	//jumps directly to the required point in array
 	//triangle needed will either be p_i or p_i+1
@@ -427,7 +427,7 @@ glm::vec3 TerrainSys::getNormal(double x, double z) {
 
 	bool out_of_bounds = false;
 	if (predicted_index < 0 ) {out_of_bounds = true;}
-	else if (predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
+	else if ((unsigned int)predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
 
 	if (out_of_bounds == false) {
 		for (int i = predicted_index; i < predicted_index+2; ++i) {

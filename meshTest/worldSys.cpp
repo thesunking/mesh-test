@@ -74,7 +74,7 @@ gameState WorldSys::update(InputResponse data, sf::Window &window, float t, cons
 
 	//reset mouse to center
 	sf::Vector2u size = window.getSize();
-	sf::Mouse::setPosition(sf::Vector2i(size.x * 0.5, size.y * 0.5), window);
+	sf::Mouse::setPosition(sf::Vector2i(int(size.x * 0.5), int(size.y * 0.5)), window);
 
 	return GAME;
 

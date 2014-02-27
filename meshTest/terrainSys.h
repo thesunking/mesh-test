@@ -32,7 +32,7 @@ private:
 	PerlinNoise temp;
 	PerlinNoise rain;
 
-	double getHeight(double x, double z);
+	float getHeight(float x, float z);
 
 	void createPerlinMesh();
 	
@@ -62,8 +62,8 @@ public:
 	std::vector<glm::vec3> getTangents();
 	std::vector<glm::vec3> getBitangents();
 
-	double getFloorHeight(double x, double z);
-	glm::vec3 getNormal(double x, double z);
+	float getFloorHeight(float x, float z);
+	glm::vec3 getNormal(float x, float z);
 
 	//void draw(RenderSys &render);
 
