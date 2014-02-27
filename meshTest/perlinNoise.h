@@ -5,32 +5,32 @@ class PerlinNoise{
 public:
 	// Constructor
 	PerlinNoise();
-	PerlinNoise(float _persistence, float _frequency, float _amplitude, int _octaves, int _randomseed);
+	PerlinNoise(double _persistence, double _frequency, double _amplitude, int _octaves, int _randomseed);
 
 	// Get Height
 	float getHeight(float x, float y) const;
 
 	// Get
-	float getPersistence() const;
-	float getFrequency() const;
-	float getAmplitude() const;
+	double getPersistence() const;
+	double getFrequency() const;
+	double getAmplitude() const;
 	int getOctaves() const;
 	int getRandomSeed() const;
 
 	// Set
-	void set(float _persistence, float _frequency, float _amplitude, int _octaves, int _randomseed);
-	void setPersistence(float _persistence);
-	void setFrequency(float _frequency);
-	void setAmplitude(float _amplitude);
+	void set(double _persistence, double _frequency, double _amplitude, int _octaves, int _randomseed);
+	void setPersistence(double _persistence);
+	void setFrequency(double _frequency);
+	void setAmplitude(double _amplitude);
 	void setOctaves(int _octaves);
 	void setRandomSeed(int _randomseed);
 
 private:
-	float total(float i, float j) const;
-	float getValue(float x, float y) const;
-	float interpolate(float x, float y, float a) const;
-	float noise(int x, int y) const;
+	double total(double i, double j) const;
+	double getValue(double x, double y) const;
+	double interpolate(double x, double y, double a) const;
+	double noise(int x, int y) const;
 
-	float persistence, frequency, amplitude;
+	double persistence, frequency, amplitude;
 	int octaves, randomseed;
 };
