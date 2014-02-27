@@ -7,12 +7,12 @@ TerrainSys::TerrainSys() : side_length(200), scaleAmount(4.0f) {
 
 	int rnd = rand();
 
-	height0.set(0.00f, 0.100f, 20.00f, 1, rnd+1); //large trends
-	height1.set(0.00f, 0.500f, 1.000f, 1, rnd+0); //mid   trends
-	height2.set(0.00f, 1.000f, 0.200f, 1, rnd+2); //small trends
+	height0.set(0.00L, 0.100L, 20.00L, 1, rnd+1); //large trends
+	height1.set(0.00L, 0.500L, 1.000L, 1, rnd+0); //mid   trends
+	height2.set(0.00L, 1.000L, 0.200L, 1, rnd+2); //small trends
 
-	temp.set(0.00f, 0.02f, 1.00f, 1, rnd+3);
-	rain.set(0.00f, 0.02f, 1.00f, 1, rnd+4);
+	temp.set(0.00L, 0.02L, 1.00L, 1, rnd+3);
+	rain.set(0.00L, 0.02L, 1.00L, 1, rnd+4);
 
 	createPerlinMesh();
 
@@ -87,8 +87,7 @@ void TerrainSys::scaleMesh() {
 
 void TerrainSys::createIndices() {
 
-	const unsigned int size = points.size();
-	const unsigned int n    = (int)sqrt(size);
+	const unsigned int n = side_length;
 
 	for (unsigned int x = 0; x < n-1; ++x) {
 		for (unsigned int z = 0; z < n-1; ++z) {
@@ -113,7 +112,7 @@ void TerrainSys::createIndices() {
 
 void TerrainSys::createNormals() {
 
-	unsigned int n = indices.size()/3;
+	unsigned int n = indices.size()/3; //number of triangles in mesh
 
 	for (unsigned int i = 0; i < n; ++i) {
 		
@@ -351,139 +350,92 @@ std::vector<glm::vec3> TerrainSys::getBitangents() { return avg_bitan; }
 
 
 
-float TerrainSys::getFloorHeight(float x, float z) {
+glm::vec2 TerrainSys::getBarycentricCoords(unsigned int triIndex, float x, float z) {
+
+	unsigned int index0 = (unsigned int)(indices[3 * triIndex]);
+	unsigned int index1 = (unsigned int)(indices[3 * triIndex + 1]);
+	unsigned int index2 = (unsigned int)(indices[3 * triIndex + 2]);
+
+	glm::vec3 v0 = points[index2] - points[index0];
+	glm::vec3 v1 = points[index1] - points[index0];
+	glm::vec3 v2 = glm::vec3(x, 0.0f, z) - points[index0];
+
+	//copy to flat triangle
+	glm::vec3 v3 = glm::vec3(v0.x, 0.0f, v0.z);
+	glm::vec3 v4 = glm::vec3(v1.x, 0.0f, v1.z);
+	glm::vec3 v5 = glm::vec3(v2.x, 0.0f, v2.z);
+
+	//compute dot products
+	float dot00 = glm::dot(v3, v3);
+	float dot01 = glm::dot(v3, v4);
+	float dot02 = glm::dot(v3, v5);
+	float dot11 = glm::dot(v4, v4);
+	float dot12 = glm::dot(v4, v5);
+
+	//compute barycentric coordinates
+	float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+	float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+	float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+	return glm::vec2(u, v);
+
+}
+
+unsigned int TerrainSys::getTriangleIndex(float x, float z) {
 
 	//jumps directly to the required point in array
 	//triangle needed will either be p_i or p_i+1
 	int predicted_index = (int)(2 * (floor(x / scaleAmount) * (side_length - 1) + floor(z / scaleAmount)));
 
 	bool out_of_bounds = false;
-	if (predicted_index < 0 ) {out_of_bounds = true;}
-	else if ((unsigned int)predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
+	if (predicted_index < 0) { out_of_bounds = true; }
+	else if ((unsigned int)predicted_index >= (2 * (side_length - 1)*(side_length - 1))) { out_of_bounds = true; }
 
 	if (out_of_bounds == false) {
-		for (int i = predicted_index; i < predicted_index+2; ++i) {
 
-			unsigned int index0 = (unsigned int)(indices[3*i]);
-			unsigned int index1 = (unsigned int)(indices[3*i+1]);
-			unsigned int index2 = (unsigned int)(indices[3*i+2]);
+		for (int i = predicted_index; i < predicted_index + 2; ++i) {
 
-			bool flag_x0 = (x > points[index0].x);
-			bool flag_x1 = (x > points[index1].x);
-			bool flag_x2 = (x > points[index2].x);
+			glm::vec2 baryCoord = getBarycentricCoords(i, x, z);
+			float u = baryCoord.x;
+			float v = baryCoord.y;
 
-			bool flag_z0 = (z > points[index0].z);
-			bool flag_z1 = (z > points[index1].z);
-			bool flag_z2 = (z > points[index2].z);
+			//check if point is in triangle
+			if ((u >= 0) && (v >= 0) && (u + v < 1)) {
 
-			// if point is in the AABB of the triangle
-			if (!( (flag_x0 == flag_x1 && flag_x0 == flag_x2) || (flag_z0 == flag_z1 && flag_z0 == flag_z2) )) {
+				return i;
 
-				//compute vectors    
-				glm::vec3 point = glm::vec3(x, 0.0f, z);
-				glm::vec3 v0 = points[index2] - points[index0];
-				glm::vec3 v1 = points[index1] - points[index0];
-				glm::vec3 v2 = point		  - points[index0];
-
-				//copy to flat triangle
-				glm::vec3 v3 = v0;
-				glm::vec3 v4 = v1;
-				glm::vec3 v5 = v2;
-				v3.y = 0.0f;
-				v4.y = 0.0f;
-				v5.y = 0.0f;
-
-				//compute dot products
-				float dot00 = glm::dot(v3,v3);
-				float dot01 = glm::dot(v3,v4);
-				float dot02 = glm::dot(v3,v5);
-				float dot11 = glm::dot(v4,v4);
-				float dot12 = glm::dot(v4,v5);
-
-				//compute barycentric coordinates
-				float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-				float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-				float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-				//check if point is in triangle
-				if ((u >= 0) && (v >= 0) && (u + v < 1)) {
-
-					return (points[index0].y + (points[index1].y - points[index0].y) * v + (points[index2].y - points[index0].y) * u);
-
-				}
 			}
 		}
 	}
 
-	return 75.0L;
+	printf("WARNING: TerrainSys getTriangleIndex returning null\n");
+	return NULL;
+
+}
+
+float TerrainSys::getFloorHeight(float x, float z) {
+
+	/* note:
+	while this function is a lot cleaner than it used to be, the barycentric coordinates
+	are actually calculated twice now, once in getTriangleIndex and once in getBarycentricCoords
+	*/
+
+	unsigned int i = getTriangleIndex(x, z);
+
+	unsigned int index0 = (unsigned int)(indices[3*i]);
+	unsigned int index1 = (unsigned int)(indices[3*i+1]);
+	unsigned int index2 = (unsigned int)(indices[3*i+2]);
+
+	glm::vec2 baryCoord = getBarycentricCoords(i, x, z);
+	float u = baryCoord.x;
+	float v = baryCoord.y;
+
+	return (points[index0].y + (points[index1].y - points[index0].y) * v + (points[index2].y - points[index0].y) * u);
 
 }
 
 glm::vec3 TerrainSys::getNormal(float x, float z) {
 
-	//jumps directly to the required point in array
-	//triangle needed will either be p_i or p_i+1
-	int predicted_index = (int) (2 * ( floor(x/scaleAmount) * (side_length-1) + floor(z/scaleAmount) ));
-
-	bool out_of_bounds = false;
-	if (predicted_index < 0 ) {out_of_bounds = true;}
-	else if ((unsigned int)predicted_index >= (2*(side_length-1)*(side_length-1))) {out_of_bounds = true;}
-
-	if (out_of_bounds == false) {
-		for (int i = predicted_index; i < predicted_index+2; ++i) {
-
-			unsigned int index0 = (unsigned int)(indices[3*i]);
-			unsigned int index1 = (unsigned int)(indices[3*i+1]);
-			unsigned int index2 = (unsigned int)(indices[3*i+2]);
-
-			bool flag_x0 = (x > points[index0].x);
-			bool flag_x1 = (x > points[index1].x);
-			bool flag_x2 = (x > points[index2].x);
-
-			bool flag_z0 = (z > points[index0].z);
-			bool flag_z1 = (z > points[index1].z);
-			bool flag_z2 = (z > points[index2].z);
-
-			// if point is in the AABB of the triangle
-			if (!( (flag_x0 == flag_x1 && flag_x0 == flag_x2) || (flag_z0 == flag_z1 && flag_z0 == flag_z2) )) {
-
-				//compute vectors    
-				glm::vec3 point = glm::vec3(x, 0.0f, z);
-				glm::vec3 v0 = points[index2] - points[index0];
-				glm::vec3 v1 = points[index1] - points[index0];
-				glm::vec3 v2 = point		  - points[index0];
-
-				//copy to flat triangle
-				glm::vec3 v3 = v0;
-				glm::vec3 v4 = v1;
-				glm::vec3 v5 = v2;
-				v3.y = 0.0f;
-				v4.y = 0.0f;
-				v5.y = 0.0f;
-
-				//compute dot products
-				float dot00 = glm::dot(v3,v3);
-				float dot01 = glm::dot(v3,v4);
-				float dot02 = glm::dot(v3,v5);
-				float dot11 = glm::dot(v4,v4);
-				float dot12 = glm::dot(v4,v5);
-
-				//compute barycentric coordinates
-				float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-				float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-				float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-				//check if point is in triangle
-				if ((u >= 0) && (v >= 0) && (u + v < 1)) {
-
-					//point is in triangle!
-					return normals[i];
-
-				}
-			}
-		}
-	} //end out_of_bounds if statement
-
-	return glm::vec3(0.0f, 1.0f, 0.0f);
+	return normals[getTriangleIndex(x, z)];
 
 }

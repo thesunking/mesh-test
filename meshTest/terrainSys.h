@@ -62,6 +62,8 @@ public:
 	std::vector<glm::vec3> getTangents();
 	std::vector<glm::vec3> getBitangents();
 
+	glm::vec2 getBarycentricCoords(unsigned int triIndex, float x, float z);
+	unsigned int getTriangleIndex(float x, float z);
 	float getFloorHeight(float x, float z);
 	glm::vec3 getNormal(float x, float z);
 
