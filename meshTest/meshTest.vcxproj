@@ -111,7 +111,6 @@
     <ClInclude Include="renderCmp.h" />
     <ClInclude Include="renderSys.h" />
     <ClInclude Include="terrainSys.h" />
-    <ClInclude Include="timeCmp.h" />
     <ClInclude Include="stateManager.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="worldSys.h" />

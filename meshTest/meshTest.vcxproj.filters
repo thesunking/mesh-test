@@ -113,9 +113,6 @@
     <ClInclude Include="controlSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="timeCmp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="loadShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
