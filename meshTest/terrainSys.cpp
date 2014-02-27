@@ -400,7 +400,7 @@ unsigned int TerrainSys::getTriangleIndex(float x, float z) {
 			float v = baryCoord.y;
 
 			//check if point is in triangle
-			if ((u >= 0) && (v >= 0) && (u + v < 1)) {
+			if ((u >= 0.0f) && (v >= 0.0f) && (u + v <= 1.0f)) {
 
 				return i;
 
