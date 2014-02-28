@@ -33,12 +33,10 @@ private:
 	//vertex array objects and vertex buffer objects
 	GLuint terrainVAO, entityVAO;
 
-	GLuint vertexBufferID, normalBufferID, colorBufferID, indexBufferID;
-	GLuint uvBufferID, tangentBufferID, bitangentBufferID;
+	GLuint indexBufferID;
 	GLuint normalmapTextureID;
 
-	GLuint entity_VertexBufferID, entity_NormalBufferID, entity_ColorBufferID, entity_IndexBufferID;
-	GLuint entity_uvBufferID, entity_tangentBufferID, entity_bitangentBufferID;
+	GLuint entity_IndexBufferID;
 	GLuint entity_normalmapTextureID;
 	
 
@@ -50,6 +48,15 @@ private:
 	glm::mat4 mP; //perspective matrix
 
 	void loadShaders();
+
+	//template <class T> GLuint genArrayBuffer(GLuint location, std::vector<T> &data); //returns ID of the generated buffer
+	//was going to use a templated function, but... I hate typing them throughout my code.
+	GLuint genArrayBuffer(GLuint location, std::vector<glm::vec2> &data);
+	GLuint genArrayBuffer(GLuint location, std::vector<glm::vec3> &data);
+	GLuint genArrayBuffer(GLuint location, std::vector<glm::vec4> &data);
+	GLuint genArrayBuffer(GLuint location, std::vector<float> &data, GLuint stride);
+
+	GLuint genElementBuffer(std::vector<GLuint> &indices);
 
 
 public:

@@ -388,6 +388,68 @@ void RenderSys::drawNumber(glm::vec3 pos, int number) {
 }
 
 
+#pragma region genArrayBuffer
+
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec2> &data) {
+	
+	GLuint bufferID;
+	glGenBuffers(1, &bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(glm::vec2), &data[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	return bufferID;
+
+}
+
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec3> &data) {
+
+	GLuint bufferID;
+	glGenBuffers(1, &bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(glm::vec3), &data[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	return bufferID;
+
+}
+
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec4> &data) {
+
+	GLuint bufferID;
+	glGenBuffers(1, &bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(glm::vec4), &data[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	return bufferID;
+
+}
+
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<float> &data, GLuint stride) {
+
+	GLuint bufferID;
+	glGenBuffers(1, &bufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(float), &data[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, stride, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	return bufferID;
+
+}
+
+#pragma endregion
+
+GLuint RenderSys::genElementBuffer(std::vector<GLuint> &indices) {
+
+	GLuint bufferID;
+	glGenBuffers(1, &bufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+	return bufferID;
+
+}
+
 
 void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm::vec3> &normalColl, std::vector<float> &color, std::vector<glm::vec2> &uvColl, std::vector<glm::vec3> &tangentColl, std::vector<glm::vec3> &bitangentColl, std::vector<GLuint> &indices) {
 	
@@ -436,61 +498,18 @@ void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glGenBuffers(1, &vertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, vertexColl.size()*sizeof(glm::vec3), &vertexColl[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	genArrayBuffer(0, vertexColl);
+	genArrayBuffer(1, normals);
+	genArrayBuffer(2, colors);
+	genArrayBuffer(3, uvColl);
+	genArrayBuffer(4, tangentColl);
+	genArrayBuffer(5, bitangentColl);
 
-	glGenBuffers(1, &normalBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
-	glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &colorBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
-	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(glm::vec4), &colors[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &uvBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
-	glBufferData(GL_ARRAY_BUFFER, uvColl.size() * sizeof(glm::vec2), &uvColl[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &tangentBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, tangentBufferID);
-	glBufferData(GL_ARRAY_BUFFER, tangentColl.size() * sizeof(glm::vec3), &tangentColl[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &bitangentBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, bitangentBufferID);
-	glBufferData(GL_ARRAY_BUFFER, bitangentColl.size() * sizeof(glm::vec3), &bitangentColl[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
+	genElementBuffer(indices);
 
 }
 
 void RenderSys::initEntity() {
-
-	CubeDefinition cube;
-	std::vector<float> local_vertices = cube.vertices;
-	std::vector<float> local_normals = cube.normals;
-	std::vector<float> local_colors = cube.colors;
-	std::vector<float> local_uvs = cube.uvs;
-	std::vector<float> local_tangents = cube.tangents;
-	std::vector<float> local_bitangents = cube.bitangents;
-	std::vector<GLuint> local_indices = cube.indices;
-	
-	unsigned int numVert = 36;
 
 	glGenVertexArrays(1, &entityVAO);
 	glBindVertexArray(entityVAO);
@@ -509,45 +528,15 @@ void RenderSys::initEntity() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glGenBuffers(1, &entity_VertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_VertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, 3 * numVert*sizeof(float), &local_vertices[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	CubeDefinition cube;
+	genArrayBuffer(0, cube.vertices, 3);
+	genArrayBuffer(1, cube.normals, 3);
+	genArrayBuffer(2, cube.colors, 4);
+	genArrayBuffer(3, cube.uvs, 2);
+	genArrayBuffer(4, cube.tangents, 3);
+	genArrayBuffer(5, cube.bitangents, 3);
 
-	glGenBuffers(1, &entity_NormalBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_NormalBufferID);
-	glBufferData(GL_ARRAY_BUFFER, 3 * numVert*sizeof(float), &local_normals[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &entity_ColorBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_ColorBufferID);
-	glBufferData(GL_ARRAY_BUFFER, 4 * numVert*sizeof(float), &local_colors[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &entity_uvBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_uvBufferID);
-	glBufferData(GL_ARRAY_BUFFER, local_uvs.size() * sizeof(float), &local_uvs[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &entity_tangentBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_tangentBufferID);
-	glBufferData(GL_ARRAY_BUFFER, local_tangents.size() * sizeof(float), &local_tangents[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &entity_bitangentBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, entity_bitangentBufferID);
-	glBufferData(GL_ARRAY_BUFFER, local_bitangents.size() * sizeof(float), &local_bitangents[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glGenBuffers(1, &entity_IndexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, entity_IndexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, local_indices.size()*sizeof(GLuint), &local_indices[0], GL_STATIC_DRAW);
+	genElementBuffer(cube.indices);
 
 }
 
