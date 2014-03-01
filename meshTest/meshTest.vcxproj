@@ -52,7 +52,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib\Release\Win32;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib\Debug;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib\Release\Win32;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;glu32.lib;soil.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>
@@ -72,8 +72,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;opengl32.lib;glu32.lib;soil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib\Release\Win32;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;glu32.lib;soil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
