@@ -43,15 +43,16 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\include;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\include;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLM;C:\Users\Louis Kayser\Documents\Visual Studio 2013\Eigen;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\lib;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\lib\Release\Win32;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;glu32.lib;soil.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>
@@ -114,6 +115,10 @@
     <ClInclude Include="stateManager.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="worldSys.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\res\main.frag" />
+    <None Include="..\Debug\res\main.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

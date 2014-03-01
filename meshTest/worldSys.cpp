@@ -45,7 +45,7 @@ WorldSys::WorldSys(RenderSys &render) : control(entity, terrain, camera), camera
 	ID block1 = entity.createEntity(testBlockID);
 	entity.get<PhysicsCmp>(block1).p = glm::vec3( 341.5f, 75.0f, 327.8f );
 	entity.get<PhysicsCmp>(block1).updateInertiaMatrix( 10.0f, 5.0f, 5.0f );
-	entity.get<RenderCmp>(block1).scalingMatrix = glm::scale(10.0f, 5.0f, 5.0f);
+	entity.get<RenderCmp>(block1).scalingMatrix = glm::scale(glm::vec3(10.0f, 5.0f, 5.0f));
 	entity.get<RenderCmp>(block1).updateTranslationMatrix( entity.get<PhysicsCmp>(block1).p );
 	entity.get<RenderCmp>(block1).updateModelMatrix();
 
