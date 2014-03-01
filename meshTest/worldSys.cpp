@@ -59,6 +59,8 @@ WorldSys::WorldSys(RenderSys &render) : control(entity, terrain, camera), camera
 	*/
 
 	render.initTerrain(terrain.getPoints(), terrain.getNormals(), terrain.getColors(),terrain.getUVs(), terrain.getTangents(), terrain.getBitangents(), terrain.getIndices());
+	terrain.cleanUp();
+
 	render.initEntity();
 
 }

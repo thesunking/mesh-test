@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Louis Kayser\Documents\Visual Studio 2013\SFML\include;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLEW\include;C:\Users\Louis Kayser\Documents\Visual Studio 2013\GLM;C:\Users\Louis Kayser\Documents\Visual Studio 2013\Eigen;C:\Users\Louis Kayser\Documents\Visual Studio 2013\SOIL</AdditionalIncludeDirectories>
@@ -57,6 +57,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

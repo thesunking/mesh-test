@@ -348,6 +348,19 @@ std::vector<glm::vec3> TerrainSys::getBitangents() { return avg_bitan; }
 #pragma endregion
 
 
+void TerrainSys::cleanUp() {
+
+	arrTemp.clear();
+	arrRain.clear();
+
+	arrColor.clear();
+	uvs.clear();
+	tangents.clear();
+	bitangents.clear();
+	avg_tan.clear();
+	avg_bitan.clear();
+
+}
 
 
 glm::vec2 TerrainSys::getBarycentricCoords(unsigned int triIndex, float x, float z) {
