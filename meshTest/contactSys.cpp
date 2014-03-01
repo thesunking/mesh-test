@@ -53,13 +53,13 @@ void ContactSys::calcForces() {
 
 	}*/
 
-	debugPrint();
+	//debugPrint();
 
 	for (unsigned int i = 0; i != n; ++i) {
 		d = i;
 		bool returnFlag = true;
 		while (returnFlag) { returnFlag = driveToZero(); }
-		printf("LOOPING\n");
+		//printf("LOOPING\n");
 	}
 
 	
@@ -71,7 +71,7 @@ bool ContactSys::driveToZero() {
 	//return true -> re-execute
 	//return false -> continue
 
-	printf("Drive to Zero\n");
+	//printf("Drive to Zero\n");
 
 	fDirection();
 	da = matA * df;
@@ -80,7 +80,7 @@ bool ContactSys::driveToZero() {
 	f = f + s*df;
 	a = a + s*da;
 
-	debugPrint();
+	//debugPrint();
 
 
 	if (set[j] == 1) {
@@ -123,7 +123,7 @@ void ContactSys::fDirection() {
 	unsigned int indSize = indicesInC.size();
 
 	if (indSize == 0) {
-		printf("Set C is empty!\n");
+		//printf("Set C is empty!\n");
 		return;
 	}
 
@@ -147,7 +147,7 @@ void ContactSys::fDirection() {
 
 	//check solution
 	float relative_error = (matAcc*x - vecAcd).norm() / vecAcd.norm();
-	printf("Rel Err in Contact Soln: %f\n", relative_error);
+	//printf("Rel Err in Contact Soln: %f\n", relative_error);
 
 	//transfer x into df
 	for (unsigned int i = 0; i != indSize; ++i) {

@@ -1,6 +1,13 @@
+#include <Windows.h>
+#include <memory>
+
 #include "stateManager.h"
 
+static size_t GetStackUsage();
+
 int main(int argc, char** argv) {
+
+	printf("Stack: %Iu\n", GetStackUsage());
 
 	srand( (unsigned int)time(NULL) );
 
@@ -13,7 +20,9 @@ int main(int argc, char** argv) {
 	sf::Vector2u init_size = window.getSize();
 	sf::Mouse::setPosition( sf::Vector2i( (int)(init_size.x * 0.5), (int)(init_size.y * 0.5) ), window );
 
-	FiniteStateMachine fsm(window);
+	auto pFSM = std::make_unique<FiniteStateMachine>(window);
+
+	printf("Stack: %Iu\n", GetStackUsage());
 
 	sf::Clock clock;
 	float t = 0.0f;
@@ -44,12 +53,12 @@ int main(int argc, char** argv) {
 
 					// key pressed
 					case sf::Event::KeyPressed:
-						fsm.keyPressed(event.key.code);
+						pFSM->keyPressed(event.key.code);
 						break;
 
 					// key released
 					case sf::Event::KeyReleased:
-						fsm.keyReleased(event.key.code);
+						pFSM->keyReleased(event.key.code);
 						break;
 
 					default:
@@ -61,11 +70,11 @@ int main(int argc, char** argv) {
 			mousePosition.x -= 450;
 			mousePosition.y -= 450;
 			mousePosition.y  = -mousePosition.y;
-			fsm.mouseUpdate(mousePosition);
+			pFSM->mouseUpdate(mousePosition);
 			
 			//printf("main:update\n");
 
-			if (!(fsm.update(t, dt))) {
+			if (!(pFSM->update(t, dt))) {
 				window.close();
 				return 0;
 			}
@@ -77,10 +86,29 @@ int main(int argc, char** argv) {
         const float alpha = accumulator / dt;
 		frameRate = (int)(0.25f * (1 / frameTime) + 0.75f * (float)frameRate);
 		//printf("main:draw\n");
-		fsm.draw(frameRate, alpha);
+		pFSM->draw(frameRate, alpha);
         window.display();
 
     }
 
     return 0;
+}
+
+static size_t GetStackUsage() {
+	MEMORY_BASIC_INFORMATION mbi;
+	VirtualQuery(&mbi, &mbi, sizeof(mbi));
+	// now mbi.AllocationBase = reserved stack memory base address
+
+	VirtualQuery(mbi.AllocationBase, &mbi, sizeof(mbi));
+	// now (mbi.BaseAddress, mbi.RegionSize) describe reserved (uncommitted) portion of the stack
+	// skip it
+
+	VirtualQuery((char*)mbi.BaseAddress + mbi.RegionSize, &mbi, sizeof(mbi));
+	// now (mbi.BaseAddress, mbi.RegionSize) describe the guard page
+	// skip it
+
+	VirtualQuery((char*)mbi.BaseAddress + mbi.RegionSize, &mbi, sizeof(mbi));
+	// now (mbi.BaseAddress, mbi.RegionSize) describe the committed (i.e. accessed) portion of the stack
+
+	return mbi.RegionSize;
 }

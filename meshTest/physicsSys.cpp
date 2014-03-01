@@ -249,7 +249,7 @@ int PhysicsSys::getContactType(Contact& c) {
 
 
 	float perp_rel_v = glm::dot(c.n, c.dp);
-	printf("Contact: %f\n", perp_rel_v);
+	//printf("Contact: %f\n", perp_rel_v);
 
 	float upper_threshold = 0.1f;
 	float lower_threshold = -1.5f;
