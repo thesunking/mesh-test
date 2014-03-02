@@ -70,8 +70,8 @@ gameState WorldSys::update(InputResponse data, sf::Window &window, float t, cons
 	// - special thanks to -
     // Maeve and Andrew for being B-B-B-Bosses.
 
-	sunAngle += 0.005f;
-	control.update(data);
+	sunAngle += 0.1f * dt;
+	control.update(data, dt);
 	physics.update(t, dt);
 
 	//reset mouse to center

@@ -26,15 +26,19 @@ int main(int argc, char** argv) {
 
 	sf::Clock clock;
 	float t = 0.0f;
-	const float dt = 0.05f;
-	float currentTime = (clock.getElapsedTime()).asSeconds();
+	const float dt = 0.01f;
+	float currentTime = (clock.getElapsedTime()).asSeconds() - 1.5f * dt; //force update call to occur before draw call
 	float accumulator = 0.0f;
 	int frameRate = 0;
 
+	float newTime;
+	float frameTime;
+
     while (window.isOpen()) {
 
-		float newTime = (clock.getElapsedTime()).asSeconds();
-        float frameTime = newTime - currentTime;
+		newTime = (clock.getElapsedTime()).asSeconds();
+        frameTime = newTime - currentTime;
+
 		if ( frameTime > 0.25f ) {frameTime = 0.25f;}		// note: max frame time to avoid spiral of death
         currentTime = newTime;
         accumulator += frameTime;

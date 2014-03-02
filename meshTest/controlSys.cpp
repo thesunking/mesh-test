@@ -8,9 +8,9 @@ ControlSys::ControlSys(EntitySys& ref0, TerrainSys& ref1, CameraSys& ref2) : ent
 
 void ControlSys::setPlayerID(ID id) { playerID = id; }
 
-void ControlSys::update(InputResponse data) {
+void ControlSys::update(InputResponse data, const float dt) {
 
-	const float speed = 1.0f;
+	const float speed = 20.0f * dt;
 
 	PhysicsCmp& playerCmp = entSys.get<PhysicsCmp>(playerID);
 

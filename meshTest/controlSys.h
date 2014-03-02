@@ -16,6 +16,6 @@ public:
 	ControlSys(EntitySys& ref0, TerrainSys& ref1, CameraSys& ref2);
 
 	void setPlayerID(ID id);
-	void update(InputResponse data);
+	void update(InputResponse data, const float dt);
 
 };
