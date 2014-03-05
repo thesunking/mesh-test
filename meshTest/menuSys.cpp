@@ -1,6 +1,7 @@
 #include "menuSys.h"
 
-gameState MenuSys::update(InputResponse data) {
+gameState MenuSys::update(InputResponse data)
+{
 
 	gameState returnState = MENU;
 

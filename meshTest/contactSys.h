@@ -9,8 +9,8 @@
 
 //making this its own class to allow for future changes (such as the addition of friction calculations)
 
-class ContactSys {
-
+class ContactSys
+{
 private:
 	unsigned int n; //total number of contact points
 
@@ -43,5 +43,4 @@ public:
 	ContactSys(unsigned int number_of_contacts, std::vector<std::vector<float>> matA, std::vector<float> b);
 
 	std::vector<float> getForces();
-
 };

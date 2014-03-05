@@ -18,7 +18,8 @@ out vec4 diffuseColor;
 out mat3 invTBN;
 out vec2 vecUV;
 
-void main() {
+void main()
+{
 	
 
 	vec4 v4_position = vec4(vPosition, 1.0f);

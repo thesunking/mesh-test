@@ -5,14 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-class PhysicsCmp {
-
+class PhysicsCmp
+{
 public:
 	ID id;
 
 	float mass;
 	glm::mat3 inertia;
-	glm::mat3 invInertia; 
+	glm::mat3 invInertia;
 
 	glm::vec3 p; //position
 	glm::vec3 v; //linear velocity
@@ -23,5 +23,4 @@ public:
 	PhysicsCmp(glm::vec3 position);
 
 	void updateInertiaMatrix( float x, float y, float z );
-
 };

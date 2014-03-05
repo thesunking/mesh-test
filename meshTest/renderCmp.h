@@ -6,8 +6,8 @@
 #include <glm/gtx/transform.hpp>
 #include <glm\gtc\quaternion.hpp>
 
-class RenderCmp {
-
+class RenderCmp
+{
 public:
 	ID id;
 
@@ -19,7 +19,7 @@ public:
 	glm::mat4 rotationMatrix;
 	glm::mat4 translationMatrix;
 	glm::mat4 modelMatrix;
-	
+
 	RenderCmp();
 	RenderCmp(float* vertices, unsigned int* indices);
 
@@ -30,5 +30,4 @@ public:
 	void updateRotationMatrix(glm::quat quaternion);
 
 	void updateModelMatrix();
-
 };

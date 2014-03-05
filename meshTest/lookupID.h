@@ -1,11 +1,13 @@
 #pragma once
 
-struct ID {
+struct ID
+{
 	unsigned int index;
 	unsigned int verif;
 };
 
-struct INDEX {
+struct INDEX
+{
 	ID id;
 	unsigned int object;
 	unsigned int next;

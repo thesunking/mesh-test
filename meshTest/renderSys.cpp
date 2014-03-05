@@ -5,8 +5,8 @@
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
 
 
-CubeDefinition::CubeDefinition() {
-
+CubeDefinition::CubeDefinition()
+{
 	vertices = {
 		-0.5f, -0.5f, -0.5f,
 		+0.5f, -0.5f, -0.5f,
@@ -287,12 +287,11 @@ CubeDefinition::CubeDefinition() {
 		30, 31, 32,
 		33, 34, 35
 	};
-
 }
 
 
-RenderSys::RenderSys(sf::RenderWindow &w) : window(w), window_x(w.getSize().x), window_y(w.getSize().y) {
-
+RenderSys::RenderSys(sf::RenderWindow &w) : window(w), window_x(w.getSize().x), window_y(w.getSize().y)
+{
 	glewInit();
 
 	mP = glm::perspective(90.0f, 1.0f, 0.1f, 1000.0f);
@@ -304,17 +303,16 @@ RenderSys::RenderSys(sf::RenderWindow &w) : window(w), window_x(w.getSize().x), 
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	glClearDepth(1.0f);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 	//load shaders
 	loadShaders();
 	glUseProgram(mainProgramID);
-
 }
 
-void RenderSys::loadShaders() {
-
+void RenderSys::loadShaders()
+{
 	//main shader and linked variables
 	mainProgramID = LoadShaders("res/main.vert", "res/main.frag");
 
@@ -327,19 +325,20 @@ void RenderSys::loadShaders() {
 	//fragment shader - uniforms
 	lightID = glGetUniformLocation(mainProgramID, "vLight");
 	normalmapSamplerID = glGetUniformLocation(mainProgramID, "NormalTextureSampler");
-
 }
 
-void RenderSys::prepare() {
-
+void RenderSys::prepare()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 }
 
-void RenderSys::updateViewMatrix(glm::mat4 matView) { mV = matView; }
+void RenderSys::updateViewMatrix(glm::mat4 matView)
+{
+	mV = matView;
+}
 
-void RenderSys::updateLightPosition(float angle) {
-
+void RenderSys::updateLightPosition(float angle)
+{
 	float temp_sin = sinf(angle);
 	float temp_cos = cosf(angle);
 
@@ -354,44 +353,19 @@ void RenderSys::updateLightPosition(float angle) {
 
 	glm::vec3 sky = temp_sin * glm::vec3(0.47f, 0.82f, 1.00f);
 	glClearColor(sky.x, sky.y, sky.z, 0.0f);
-
 }
 
-void RenderSys::drawNumber(glm::vec3 pos, int number) {
-	
+void RenderSys::drawNumber(glm::vec3 pos, int number)
+{
 	//Print framerate
-	//printf("%d\n", number);
-
-	/*
-	window.pushGLStates();
-	//glPushMatrix();
-		
-		
-		
-		std::ostringstream ss;
-		ss << number;
-		sf::Text text;
-		
-		text.setFont(gameFont);
-		text.setString(ss.str());
-		text.setCharacterSize(25);
-		text.setColor(sf::Color::White);
-		text.setStyle(sf::Text::Regular);
-		text.setPosition(pos.x,pos.y);
-
-		window.draw(text);
-
-	//glPopMatrix();
-	window.popGLStates();
-	*/
-
+	printf("%d\n", number);
 }
 
 
 #pragma region genArrayBuffer
 
-GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec2> &data) {
-	
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec2> &data)
+{
 	GLuint bufferID;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -399,11 +373,10 @@ GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec2> &data) 
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	return bufferID;
-
 }
 
-GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec3> &data) {
-
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec3> &data)
+{
 	GLuint bufferID;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -411,11 +384,10 @@ GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec3> &data) 
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	return bufferID;
-
 }
 
-GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec4> &data) {
-
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec4> &data)
+{
 	GLuint bufferID;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -423,11 +395,10 @@ GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<glm::vec4> &data) 
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	return bufferID;
-
 }
 
-GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<float> &data, GLuint stride) {
-
+GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<float> &data, GLuint stride)
+{
 	GLuint bufferID;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
@@ -435,51 +406,56 @@ GLuint RenderSys::genArrayBuffer(GLuint location, std::vector<float> &data, GLui
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, stride, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	return bufferID;
-
 }
 
 #pragma endregion
 
-GLuint RenderSys::genElementBuffer(std::vector<GLuint> &indices) {
-
+GLuint RenderSys::genElementBuffer(std::vector<GLuint> &indices)
+{
 	GLuint bufferID;
 	glGenBuffers(1, &bufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 	return bufferID;
-
 }
 
 
-void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm::vec3> &normalColl, std::vector<float> &color, std::vector<glm::vec2> &uvColl, std::vector<glm::vec3> &tangentColl, std::vector<glm::vec3> &bitangentColl, std::vector<GLuint> &indices) {
-	
+void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm::vec3> &normalColl, std::vector<float> &color, std::vector<glm::vec2> &uvColl, std::vector<glm::vec3> &tangentColl, std::vector<glm::vec3> &bitangentColl, std::vector<GLuint> &indices)
+{
 	numberOfVertices = vertexColl.size();
 	numberOfIndices = indices.size();
 
 	//this gives normals for each vertex
 	std::vector<glm::vec3> normals;
 	unsigned int side_length = (unsigned int)sqrt(numberOfVertices);
-	for (unsigned int m = 0; m < side_length; ++m) {
-		for (unsigned int n = 0; n < side_length; ++n) {
-
+	for (unsigned int m = 0; m < side_length; ++m)
+	{
+		for (unsigned int n = 0; n < side_length; ++n)
+		{
 			unsigned int m0 = m;
 			unsigned int n0 = n;
-			if (m0 == side_length-1) {m0 -= 1;}
-			if (n0 == side_length-1) {n0 -= 1;}
+			if (m0 == side_length-1)
+			{
+				m0 -= 1;
+			}
+			if (n0 == side_length-1)
+			{
+				n0 -= 1;
+			}
 
 			unsigned int index = 2*(m0*(side_length-1)+n0);
 
 			normals.push_back(normalColl[index]);
-
 		}
 	}
 
 	//add alpha values to color array
 	std::vector<glm::vec4> colors;
-	for (unsigned int i = 0; i < (color.size() / 3); ++i) {
+	for (unsigned int i = 0; i < (color.size() / 3); ++i)
+	{
 		colors.push_back(glm::vec4(color[3 * i], color[3 * i + 1], color[3 * i + 2], 0.5f));
 	}
-	
+
 
 	glGenVertexArrays(1, &terrainVAO);
 	glBindVertexArray(terrainVAO);
@@ -506,11 +482,10 @@ void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm:
 	genArrayBuffer(5, bitangentColl);
 
 	genElementBuffer(indices);
-
 }
 
-void RenderSys::initEntity() {
-
+void RenderSys::initEntity()
+{
 	glGenVertexArrays(1, &entityVAO);
 	glBindVertexArray(entityVAO);
 
@@ -537,13 +512,11 @@ void RenderSys::initEntity() {
 	genArrayBuffer(5, cube.bitangents, 3);
 
 	genElementBuffer(cube.indices);
-
 }
 
 
-
-void RenderSys::drawTerrain() {
-
+void RenderSys::drawTerrain()
+{
 	glBindVertexArray(terrainVAO);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -560,11 +533,10 @@ void RenderSys::drawTerrain() {
 	glUniform4fv(lightID, 1, &light[0]);
 
 	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, (void*)0);
-
 }
 
-void RenderSys::drawEntity(RenderCmp &cmp) {
-
+void RenderSys::drawEntity(RenderCmp &cmp)
+{
 	glBindVertexArray(entityVAO);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -580,5 +552,4 @@ void RenderSys::drawEntity(RenderCmp &cmp) {
 
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
-	
 }

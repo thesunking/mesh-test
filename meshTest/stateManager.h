@@ -7,26 +7,26 @@
 #include "renderSys.h"
 
 
-class FiniteStateMachine {
-	
+class FiniteStateMachine
+{
 private:
 	std::deque<gameState> stateStack;
-	
+
 	int width;
 	int height;
 
 	sf::RenderWindow &window;
 
 	RenderSys render;
-	InputSys  input;
-	MenuSys	  menu;
-	WorldSys  world;
+	InputSys input;
+	MenuSys menu;
+	WorldSys world;
 
 	bool resolveReturnedState(gameState state);
-	
+
 public:
 	FiniteStateMachine(sf::RenderWindow &windowPtr);
-	
+
 	int getWidth();
 	int getHeight();
 	void resize();
@@ -37,5 +37,4 @@ public:
 	void keyPressed(sf::Keyboard::Key key);
 	void keyReleased(sf::Keyboard::Key key);
 	void mouseUpdate(sf::Vector2i mousePosition);
-	
 };

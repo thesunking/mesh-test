@@ -10,7 +10,8 @@ in vec2 vecUV;
 in mat3 invTBN;
 
 
-void main() {
+void main()
+{
 	
 	vec3 TextureNormal_tangentspace = normalize(texture2D( NormalTextureSampler, vecUV ).rgb*2.0 - 1.0);
 

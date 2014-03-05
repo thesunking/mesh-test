@@ -8,14 +8,14 @@
 #include "typedefs.h"
 #include "inputResponse.h"
 
-class WorldSys {
-
+class WorldSys
+{
 private:
-	EntitySys   entity;
-	TerrainSys	terrain;
-	ControlSys  control;
-	CameraSys	camera;
-	PhysicsSys  physics;
+	EntitySys entity;
+	TerrainSys terrain;
+	ControlSys control;
+	CameraSys camera;
+	PhysicsSys physics;
 
 	ID testBlockID;
 
@@ -25,9 +25,8 @@ public:
 	WorldSys(RenderSys &render);
 
 	gameState update(InputResponse data, sf::Window &window, float t, const float dt);
-	
+
 	void draw(RenderSys &render);
 
 	void drawAll(RenderSys &render);
-
 };

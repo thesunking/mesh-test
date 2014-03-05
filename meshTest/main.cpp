@@ -5,8 +5,8 @@
 
 static size_t GetStackUsage();
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv)
+{
 	printf("Stack: %Iu\n", GetStackUsage());
 
 	srand( (unsigned int)time(NULL) );
@@ -34,71 +34,76 @@ int main(int argc, char** argv) {
 	float newTime;
 	float frameTime;
 
-    while (window.isOpen()) {
-
+	while (window.isOpen())
+	{
 		newTime = (clock.getElapsedTime()).asSeconds();
-        frameTime = newTime - currentTime;
+		frameTime = newTime - currentTime;
 
-		if ( frameTime > 0.25f ) {frameTime = 0.25f;}		// note: max frame time to avoid spiral of death
-        currentTime = newTime;
-        accumulator += frameTime;
+		if ( frameTime > 0.25f )
+		{
+			frameTime = 0.25f;
+		} // note: max frame time to avoid spiral of death
+		currentTime = newTime;
+		accumulator += frameTime;
 
-        while ( accumulator >= dt ) {
-
+		while ( accumulator >= dt )
+		{
 			sf::Event event;
-			while (window.pollEvent(event)) {
-			// check the type of the event...
-				switch (event.type) {
-
+			while (window.pollEvent(event))
+			{
+				// check the type of the event...
+				switch (event.type)
+				{
 					// window closed
-					case sf::Event::Closed:
-						window.close();
-						return 0;
+				case sf::Event::Closed:
+					window.close();
+					return 0;
 
 					// key pressed
-					case sf::Event::KeyPressed:
-						pFSM->keyPressed(event.key.code);
-						break;
+				case sf::Event::KeyPressed:
+					pFSM->keyPressed(event.key.code);
+					break;
 
 					// key released
-					case sf::Event::KeyReleased:
-						pFSM->keyReleased(event.key.code);
-						break;
+				case sf::Event::KeyReleased:
+					pFSM->keyReleased(event.key.code);
+					break;
 
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 
 			sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 			mousePosition.x -= 450;
 			mousePosition.y -= 450;
-			mousePosition.y  = -mousePosition.y;
+			mousePosition.y = -mousePosition.y;
 			pFSM->mouseUpdate(mousePosition);
-			
+
 			//printf("main:update\n");
 
-			if (!(pFSM->update(t, dt))) {
+			if (!(pFSM->update(t, dt)))
+			{
 				window.close();
 				return 0;
 			}
 
-            t += dt;
-            accumulator -= dt;
-        }
-		
-        const float alpha = accumulator / dt;
+			t += dt;
+			accumulator -= dt;
+		}
+
+		const float alpha = accumulator / dt;
 		frameRate = (int)(0.25f * (1 / frameTime) + 0.75f * (float)frameRate);
 		//printf("main:draw\n");
 		pFSM->draw(frameRate, alpha);
-        window.display();
+		window.display();
+	}
 
-    }
-
-    return 0;
+	return 0;
 }
 
-static size_t GetStackUsage() {
+static size_t GetStackUsage()
+{
 	MEMORY_BASIC_INFORMATION mbi;
 	VirtualQuery(&mbi, &mbi, sizeof(mbi));
 	// now mbi.AllocationBase = reserved stack memory base address

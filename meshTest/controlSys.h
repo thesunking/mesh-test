@@ -4,8 +4,8 @@
 #include "inputResponse.h"
 #include "cameraSys.h"
 
-class ControlSys {
-
+class ControlSys
+{
 private:
 	EntitySys& entSys;
 	TerrainSys& terSys;
@@ -17,5 +17,4 @@ public:
 
 	void setPlayerID(ID id);
 	void update(InputResponse data, const float dt);
-
 };

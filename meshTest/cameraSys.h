@@ -4,8 +4,8 @@
 
 //reference: https://github.com/dustin-biser/Rigid3D/blob/master/src/utils/GlUtils/Camera.cpp
 
-class CameraSys {
-
+class CameraSys
+{
 private:
 	EntitySys& entSys;
 	ID playerID;
@@ -22,11 +22,10 @@ public:
 	glm::vec3 getForwardVec();
 	glm::vec3 getLeftVec();
 	glm::vec3 getUpVec();
-	
+
 	void roll(float angle);
 	void pitch(float angle);
 	void yaw(float angle);
 
 	glm::mat4 updateView();
-
 };

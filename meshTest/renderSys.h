@@ -6,7 +6,8 @@
 #include <Simple OpenGL Image Library\src\SOIL.h>
 
 
-struct CubeDefinition {
+struct CubeDefinition
+{
 	std::vector<float> vertices;
 	std::vector<float> normals;
 	std::vector<float> colors;
@@ -17,8 +18,8 @@ struct CubeDefinition {
 	CubeDefinition();
 };
 
-class RenderSys {
-
+class RenderSys
+{
 private:
 
 	sf::RenderWindow &window;
@@ -38,7 +39,7 @@ private:
 
 	GLuint entity_IndexBufferID;
 	GLuint entity_normalmapTextureID;
-	
+
 
 	unsigned int numberOfVertices;
 	unsigned int numberOfIndices;
@@ -69,16 +70,15 @@ public:
 	void drawNumber(glm::vec3 pos, int number);
 
 	void initTerrain(std::vector<glm::vec3> &points,
-					std::vector<glm::vec3> &normals,
-					std::vector<float> &color,
-					std::vector<glm::vec2> &uvs,
-					std::vector<glm::vec3> &tangents,
-					std::vector<glm::vec3> &bitangents,
-					std::vector<GLuint> &indices);
+	                 std::vector<glm::vec3> &normals,
+	                 std::vector<float> &color,
+	                 std::vector<glm::vec2> &uvs,
+	                 std::vector<glm::vec3> &tangents,
+	                 std::vector<glm::vec3> &bitangents,
+	                 std::vector<GLuint> &indices);
 	void initEntity();
 
 
 	void drawTerrain();
 	void drawEntity(RenderCmp &cmp);
-
 };
