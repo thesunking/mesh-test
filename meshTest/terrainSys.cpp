@@ -72,7 +72,7 @@ void TerrainSys::createHeightmap()
 
 void TerrainSys::scaleMesh()
 {
-	for (unsigned int i = 0; i < points.size(); ++i)
+	for (std::vector<glm::vec3>::size_type i = 0; i != points.size(); ++i)
 	{
 		points[i].x *= scaleAmount;
 		points[i].y *= scaleAmount;
@@ -84,9 +84,9 @@ void TerrainSys::createIndices()
 {
 	const unsigned int n = side_length;
 
-	for (unsigned int x = 0; x < n-1; ++x)
+	for (unsigned int x = 0; x != n-1; ++x)
 	{
-		for (unsigned int z = 0; z < n-1; ++z)
+		for (unsigned int z = 0; z != n-1; ++z)
 		{
 			//index of corner of quad, other indices are found relative to this
 			unsigned int i = x*n+z;
@@ -108,7 +108,7 @@ void TerrainSys::createNormals()
 {
 	unsigned int n = indices.size()/3; //number of triangles in mesh
 
-	for (unsigned int i = 0; i < n; ++i)
+	for (std::vector<unsigned int>::size_type i = 0; i != n; ++i)
 	{
 		glm::vec3 v0 = points[indices[3*i+2]] - points[indices[3*i]];
 		glm::vec3 v1 = points[indices[3*i+1]] - points[indices[3*i]];
@@ -139,7 +139,7 @@ void TerrainSys::addTempAndRain()
 void TerrainSys::coolHighPoints()
 {
 	//adjust temperature for extreme heights
-	for (unsigned int i = 0; i < points.size(); ++i)
+	for (std::vector<glm::vec3>::size_type i = 0; i != points.size(); ++i)
 	{
 		float adj_ht = (points[i].y / scaleAmount);
 		arrTemp[i] -= ( adj_ht * adj_ht * 0.01f );
@@ -173,7 +173,7 @@ void TerrainSys::addRainShadows()
 
 void TerrainSys::colorBiomes()
 {
-	for (unsigned int i = 0; i < points.size(); ++i)
+	for (std::vector<float>::size_type i = 0; i != points.size(); ++i)
 	{
 		arrColor.push_back( arrTemp[i] ); //R
 		arrColor.push_back( arrRain[i] ); //G
@@ -207,10 +207,8 @@ void TerrainSys::calcTextureCoords()
 
 void TerrainSys::calcTangents()
 {
-	//n = number of triangles
-	unsigned int n = indices.size() / 3;
 
-	for (unsigned int i = 0; i < n; ++i)
+	for (std::vector<unsigned int>::size_type i = 0; i != indices.size() / 3; ++i)
 	{
 		glm::vec3 deltaPos1 = points[indices[3 * i + 2]] - points[indices[3 * i]];
 		glm::vec3 deltaPos2 = points[indices[3 * i + 1]] - points[indices[3 * i]];
@@ -436,7 +434,7 @@ unsigned int TerrainSys::getTriangleIndex(float x, float z)
 		}
 	}
 
-	printf("WARNING: TerrainSys getTriangleIndex returning null\n");
+	//printf("WARNING: TerrainSys getTriangleIndex returning null\n");
 	return NULL;
 }
 

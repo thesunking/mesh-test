@@ -428,24 +428,55 @@ void RenderSys::initTerrain(std::vector<glm::vec3> &vertexColl, std::vector<glm:
 	//this gives normals for each vertex
 	std::vector<glm::vec3> normals;
 	unsigned int side_length = (unsigned int)sqrt(numberOfVertices);
-	for (unsigned int m = 0; m < side_length; ++m)
+	for (unsigned int x = 0; x != side_length; ++x)
 	{
-		for (unsigned int n = 0; n < side_length; ++n)
+		for (unsigned int z = 0; z != side_length; ++z)
 		{
-			unsigned int m0 = m;
-			unsigned int n0 = n;
-			if (m0 == side_length-1)
+
+			bool onEdge_LowX = (x == 0);
+			bool onEdge_LowZ = (z == 0);
+			bool onEdge_HighX = (x == side_length - 1);
+			bool onEdge_HighZ = (z == side_length - 1);
+
+			glm::vec3 result = glm::vec3();
+
+			if ((!onEdge_LowX) && (!onEdge_LowZ))
 			{
-				m0 -= 1;
-			}
-			if (n0 == side_length-1)
-			{
-				n0 -= 1;
+				//result += tri_nrm_0 + tri_nrm_1;
+				unsigned int i0 = 2 * ((x - 1) * (side_length - 1) + (z - 1));
+				unsigned int i1 = i0 + 1;
+
+				result += normalColl[i0] + normalColl[i1];
 			}
 
-			unsigned int index = 2*(m0*(side_length-1)+n0);
+			if ((!onEdge_LowX) && (!onEdge_HighZ))
+			{
+				//result += tri_nrm_2;
+				unsigned int i2 = 2 * ((x - 1) * (side_length - 1) + z);
 
-			normals.push_back(normalColl[index]);
+				result += normalColl[i2];
+			}
+
+			if ((!onEdge_HighX) && (!onEdge_HighZ))
+			{
+				//result += tri_nrm_3 + tri_nrm_4;
+				unsigned int i4 = 2 * (x * (side_length - 1) + z);
+				unsigned int i3 = i4 + 1;
+
+				result += normalColl[i3] + normalColl[i4];
+			}
+
+			if ((!onEdge_HighX) && (!onEdge_LowZ))
+			{
+				//result += tri_nrm_5;
+				unsigned int i5 = 2 * (x * (side_length - 1) + (z - 1)) + 1;
+
+				result += normalColl[i5];
+			}
+
+			result = glm::normalize(result);
+			normals.push_back(result);
+
 		}
 	}
 
