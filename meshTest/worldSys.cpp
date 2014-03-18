@@ -57,7 +57,7 @@ WorldSys::WorldSys(RenderSys &render) : control(entity, terrain, camera), camera
 gameState WorldSys::update(InputResponse data, sf::Window &window, float t, const float dt)
 {
 
-	sunAngle += 0.1f * dt;
+	//sunAngle += 0.1f * dt;
 	control.update(data, dt);
 	physics.update(t, dt);
 

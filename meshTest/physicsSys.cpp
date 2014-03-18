@@ -62,10 +62,11 @@ Derivative PhysicsSys::evaluate(State& initial, float t, float dt, Derivative &d
 
 glm::vec3 PhysicsSys::acceleration(State& state, float t)
 {
-	float g = gravity;
+	//float g = gravity;
 	float b = drag;
 
-	glm::vec3 res(-b*state.v.x, -g-b*state.v.y, -b*state.v.z);
+	//glm::vec3 res(-b*state.v.x, -g - b*state.v.y, -b*state.v.z);
+	glm::vec3 res = -b*state.v;
 	return res;
 }
 
@@ -198,6 +199,7 @@ void PhysicsSys::update(float t, const float dt)
 		else
 		{
 			//object is a simple point and will be placed above ground
+			phyCmp.v += glm::vec3(0.0f, -gravity * dt, 0.0f);
 			updateComponentState(phyCmp, integrate(State(phyCmp), t, dt));
 			clampAboveGround(phyCmp);
 		}
@@ -396,6 +398,7 @@ void PhysicsSys::resolve_object(PhysicsCmp& phyCmp, RenderCmp &rndCmp, float t, 
 	//if there are no collisions at t+dt, then just integrate and update the object
 	if (contacts.size() == 0)
 	{
+		phyCmp.v += glm::vec3(0.0f, -gravity * dt, 0.0f);
 		updateComponentState(phyCmp, rndCmp, integrate(State(phyCmp), t, dt), dt);
 		return;
 	}
@@ -426,7 +429,7 @@ void PhysicsSys::resolve_object(PhysicsCmp& phyCmp, RenderCmp &rndCmp, float t, 
 
 		for (unsigned int i = 0; i != contacts.size(); ++i)
 		{
-			glm::vec3 f = forces[i] * contacts[i].n;
+			glm::vec3 f = forces[i] * contacts[i].n * dt;
 			result_force += f;
 			result_torque += glm::cross(((contacts[i].p + contacts[i].dp*dt) - phyCmp.p), f);
 		}
@@ -460,6 +463,7 @@ void PhysicsSys::resolve_object(PhysicsCmp& phyCmp, RenderCmp &rndCmp, float t, 
 		float bisect = findTimeOfCollision(*c_focus, dt);
 		float adj_dt = bisect * dt;
 
+		phyCmp.v += glm::vec3(0.0f, -gravity * adj_dt, 0.0f);
 		updateComponentState(phyCmp, rndCmp, integrate(State(phyCmp), t, adj_dt), adj_dt);
 
 		std::vector<float> forces = calcCollidingForces(phyCmp, contacts);
@@ -476,6 +480,7 @@ void PhysicsSys::resolve_object(PhysicsCmp& phyCmp, RenderCmp &rndCmp, float t, 
 		phyCmp.v += result_delta_v;
 		phyCmp.w += result_delta_w;
 
+		phyCmp.v += glm::vec3(0.0f, -gravity * (dt - adj_dt), 0.0f);
 		updateComponentState(phyCmp, rndCmp, integrate(State(phyCmp), t + adj_dt, dt - adj_dt), dt - adj_dt);
 		return;
 	}

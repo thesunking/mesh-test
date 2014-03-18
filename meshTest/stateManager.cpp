@@ -62,7 +62,7 @@ void FiniteStateMachine::draw(int frameRate, const float alpha)
 		break;
 	}
 
-	render.drawNumber(glm::vec3(3.0f, 3.0f, 0.0f), frameRate);
+	//render.drawNumber(glm::vec3(3.0f, 3.0f, 0.0f), frameRate);
 }
 
 bool FiniteStateMachine::resolveReturnedState(gameState state)
